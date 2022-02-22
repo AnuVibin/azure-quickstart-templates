@@ -1,0 +1,24 @@
+variables:
+  ARM_PASS: $(adminPass)
+
+trigger:
+- none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'quickstarts/microsoft.web/webapp-linux-managed-mysql/'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Free Trial(d5290936-b96a-4bc1-b4a9-416d0e91ea75)'
+    subscriptionId: 'd5290936-b96a-4bc1-b4a9-416d0e91ea75'
+    action: 'DeleteRG'
+    resourceGroupName: 'ARMPipelinesLAMP-rg'
+    location: 'East US'
